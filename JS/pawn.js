@@ -3,24 +3,12 @@ class Pawn {
     #position;
     #isAlive;
     #div = document.createElement('div');
-    width = 170;
-    // 间隔
-    interval = 20;
+
+    width = (config.width -  (config.col - 1) * config.interval) / config.col;
     // 数字
     #number = 0;
 
     #init() {
-        // 数据劫持
-        Object.defineProperty(this, 'color', {
-            get() {
-                return this.#color;
-            },
-            set(value) {
-                // 给color赋值时，同时修改div的背景颜色
-                this.#div.style.backgroundColor = value;
-                this.#color = value;
-            }
-        });
         // 位置
         Object.defineProperty(this, 'position', {
             get() {
@@ -32,11 +20,11 @@ class Pawn {
                     y: 0
                 }
                 // 计算位置
-                result.x = value.x * (this.width + this.interval); // 4 是棋盘的格子数
-                result.y = value.y * (this.width + this.interval);
+                result.x = value.x * (this.width + config.interval); // 4 是棋盘的格子数
+                result.y = value.y * (this.width + config.interval);
                 // 给position赋值时，同时修改div的transform属性
-                this.#div.style.top = `${result.y + this.interval}px`;
-                this.#div.style.left = `${result.x + this.interval}px`;
+                this.#div.style.top = `${result.y + 20}px`;
+                this.#div.style.left = `${result.x + 20}px`;
                 this.#position = value;
             }
         })
@@ -71,12 +59,14 @@ class Pawn {
         })
     }
 
-    constructor(color, position, className, number, element) {
+    constructor(position, className, number, element) {
         // 初始化
         this.#init();
-        this.color = color; // 这将触发 color 的 setter
         this.position = position; // 这将触发 position 的 setter
         this.#div.className = className + ' item animate__animated animate__zoomIn'
+        this.#div.style.width = this.width + 'px';
+        this.#div.style.height = this.width + 'px';
+        this.#div.style.lineHeight = this.width + 'px';
         this.number = number;
         element.appendChild(this.#div);
     }
