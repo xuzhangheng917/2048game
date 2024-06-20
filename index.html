@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2048小游戏</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="./CSS/index.css">
+  <script src="./JS/config.js"></script>
+  <script src="./JS/pawn.js"></script>
+  <script src="./JS/util.js"></script>
+</head>
+<body>
+<h1 class="Title">
+  <div>2</div>
+  <div>0</div>
+  <div>4</div>
+  <div>8</div>1
+  <div>小</div>
+  <div>游</div>
+      <div>戏</div>
+    </h1>
+<div class="ContextBox">
+  <div class="leftBox">
+    <div>
+    <h2>游戏简介</h2>
+    <hr>
+    <p>《2048》是一款比较流行的数字游戏最早于2014年3月20日发行。
+      原版2048首先在GitHub上发布，原作者是Gabriele Cirulli
+      <br><br>
+      如何玩：&nbsp;用&nbsp;方向键&nbsp;移动方块. 当两个具有相同数字的方块接触时，
+      它们会&nbsp;合并为一个！数字到达2048即为胜利</p>
+  </div>
+  </div>
+  <div  id="chessboard" class="CenterBox">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="overlay" id="overlay">
+    </div>
+  </div>
+  <div class="RightBox">
+    <div class="FractionBox">
+      <div id="nowScore" class="CurrentFraction">
+        <h2>当前分数</h2>
+        <p  class="Fraction">0</p>
+<!--        <span style="" class="Fraction animate__animated animate__fadeOutUp">+18</span>-->
+      </div>
+      <div class="MaxFraction">
+        <h2>最高分</h2>
+        <p class="Fraction">0</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="image">
+    </div>
+  </div>
+</div>
+    <script src="./JS/main.js"></script>
+</body>
+</html>

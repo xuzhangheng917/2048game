@@ -1,0 +1,269 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-image: url("../assets/image/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Star, serif;
+    user-select: none;
+}
+
+@font-face {
+    font-family: "Star";
+    src: url("../assets/fonts/Star.ttf");
+}
+.Title {
+    /* 使用 Flexbox 布局 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+
+}
+
+.Title div:nth-child(1) {
+    color: rgb(50, 117, 46);
+}
+
+.Title div:nth-child(2) {
+    color: rgb(122, 209, 64);
+}
+
+.Title div:nth-child(3) {
+    color: rgb(241, 229, 214);
+}
+
+.Title div:nth-child(4) {
+    color: rgb(8, 27, 76);
+}
+
+.Title div:nth-child(5) {
+    color: rgb(99, 185, 195);
+}
+
+.Title div:nth-child(6) {
+    color: rgb(204, 44, 29);
+}
+
+.Title div:nth-child(7) {
+    color: rgb(238, 134, 178);
+}
+
+.ContextBox {
+    width: 100vw;
+    height: calc(100vh - 132px);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ContextBox .leftBox, .RightBox {
+    width: 404px;
+    height: calc(100vh - 132px);
+}
+
+.CenterBox {
+    color: white;
+    display: grid;
+    width: 820px;
+    height: 820px;
+    border: 10px solid rgba(242, 192, 221, 1);
+    border-radius: 25px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 20px; /* 可选：设置网格项之间的间距 */
+    /*padding-left: 20px;*/
+    /*padding-top: 20px; !* 为容器设置内边距 *!*/
+    padding: 20px;
+    /*box-sizing: border-box; !* 确保内边距不影响宽度计算 *!*/
+    position: relative;
+}
+
+.ContextBox .leftBox {
+    display: flex;
+    align-items: center;
+    margin-left: 5%;
+}
+
+.ContextBox .RightBox {
+    display: flex;
+    flex-direction: column; /* 垂直排列子元素 */
+    justify-content: center;
+    align-items: center;
+    margin-right: 5%;
+}
+
+.ContextBox .leftBox h2 {
+    font-size: 50px;
+    text-align: center;
+}
+
+.ContextBox .leftBox p {
+    font-size: 25px;
+    line-height: 150%;
+    font-weight: bold;
+}
+
+hr {
+    margin: 5px 0;
+    height: 5px;
+    background-color: white; /* 设置水平线的颜色 */
+
+}
+
+hr.divider {
+    width: 80%;
+    margin: 10px 0; /* 添加上下外边距 */
+    height: 5px;
+}
+
+.FractionBox {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ContextBox .RightBox .CurrentFraction,.MaxFraction {
+    width: 150px;
+    height: 150px;
+    background-color: rgba(255,255,255,.5);
+    border-radius: 25px;
+}
+
+.CurrentFraction,.MaxFraction {
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.image {
+    width: 250px;
+    height: 250px;
+    background-image: url("../assets/image/dog.gif");
+    background-size: cover;
+}
+
+.image:hover {
+    background-image: url("../assets/image/cry.gif");
+}
+
+.Fraction {
+    text-align: center;
+    font-size: 50px;
+}
+
+.ContextBox .CenterBox .item {
+    width: 170px;
+    height: 170px;
+    text-align: center;
+    line-height: 170px;
+    font-size: 50px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, .5);
+    border-radius: 20px;
+}
+
+.overlay {
+    z-index: 30;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
+}
+
+.win {
+    animation: forwards 2s fadeIn;
+    background-image: url("../assets/image/win.gif");
+}
+
+.lose {
+    animation: forwards 2s fadeIn;
+    background-image: url("../assets/image/lose.gif");
+}
+
+@keyframes fadeIn {
+    from {
+        background-size: 0%;
+    }
+    to {
+        background-size: 70%;
+    }
+}
+
+
+/*2*/
+.Two {
+    background-color: rgba(50, 117, 46, .9) !important;
+}
+
+/*4*/
+.Four {
+    background-color: rgba(122, 209, 64, .9) !important;
+}
+
+/*8*/
+.Eight {
+    background-color: rgba(241, 229, 214, .9) !important;
+}
+
+/*16*/
+.Sixteen {
+    background-color: rgba(8, 27, 76, .9) !important;
+}
+
+/*32*/
+.ThirtyTwo {
+    background-color: rgba(99, 185, 195, .9) !important;
+}
+
+/*64*/
+.SixtyFour {
+    background-color: rgba(204, 44, 29, .9) !important;
+}
+
+/*128*/
+.OneHundredTwentyEight {
+    background-color: rgba(238, 134, 178, .9) !important;
+}
+
+/*256*/
+.TwoHundredFiftySix {
+    background-color: rgba(50,99,102, .9) !important;
+}
+
+/*512*/
+.FiveHundredTwelve {
+    background-color: rgba(68,32,98, .9) !important;
+}
+
+/*1024*/
+.OneThousandTwentyFour {
+    background-color: rgba(50,114,155, .9) !important;
+}
+
+/*2048*/
+.TwoThousandFortyEight {
+    background-color: rgba(237,148,53, .9) !important;
+}
+
+.pawn {
+    transition: all 0.1s;
+    position: absolute;
+}
+.rise_score {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
