@@ -283,6 +283,7 @@ h2 {
     font-weight: bold;
     border-width: 0;
     border-radius: 20px;
+    text-align: center;
 }
 
 .GameDifficulty button {
@@ -292,30 +293,52 @@ h2 {
     border-width: 0;
     border-radius: 20px;
     background-color: rgba(255, 255, 255, .7);
+    animation: forwards TransHide .3s;
 }
 
 .GameDifficulty button:hover {
-    animation: forwards TransShow .5s;
+    animation: forwards TransShow .4s;
 }
 
-.GameDifficulty button.blur {
-    animation: forwards TransHide .5s;
+.ButtonClick {
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 25px !important;
+    background-color: rgba(255, 255, 255, 1) !important;
 }
+
+.ButtonLoseClick {
+    animation: forwards TransHide .3s;
+}
+
 
 @keyframes TransShow {
     from {
+        width: 90%;
+        height: 90%;
+        font-size: 20px;
         background-color: rgba(255, 255, 255, .7);
+
     }
     to {
+        width: 100%;
+        height: 100%;
+        font-size: 25px;
         background-color: rgba(255, 255, 255, 1);
     }
 }
 
 @keyframes TransHide {
     from {
+        width: 100%;
+        height: 100%;
+        font-size: 25px;
         background-color: rgba(255, 255, 255, 1);
     }
     to {
+        width: 90%;
+        height: 90%;
+        font-size: 20px;
         background-color: rgba(255, 255, 255, .7);
     }
 }
