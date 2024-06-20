@@ -28,4 +28,3 @@ chessboard.style.width = config.width + "px";
 chessboard.style.height = config.height + "px";
 // 开始游戏
 startGame();
-
