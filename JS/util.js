@@ -286,6 +286,7 @@ function startGame() {
 function createBg() {
     const element = document.getElementById("chessboard"); // 获取元素
     const chessboardElement = document.querySelectorAll("#chessboard .bg"); // 获取元素
+    const elementWith = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
     element.style.gridTemplateColumns = `repeat(${config.col},1fr)`; // 1fr 代表平均分配
     element.style.gridTemplateRows = `repeat(${config.col},1fr)`;  // 1fr 代表平均分配
     element.style.gap = config.interval + "px"; // 间距
@@ -305,8 +306,8 @@ function createBg() {
             if (i >= config.col * config.col) {
                 element.removeChild(chessboardElement[i])
             } else {
-                chessboardElement[i].style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
-                chessboardElement[i].style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                chessboardElement[i].style.width = elementWith;
+                chessboardElement[i].style.height = elementWith;
             }
         }
     }
@@ -316,12 +317,12 @@ function createBg() {
             if (i >= chessboardElement.length) {
                 const item = document.createElement("div");
                 item.className = "item bg";
-                item.style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
-                item.style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                item.style.width = elementWith;
+                item.style.height = elementWith;
                 element.appendChild(item);
             } else {
-                chessboardElement[i].style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
-                chessboardElement[i].style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                chessboardElement[i].style.width = elementWith;
+                chessboardElement[i].style.height = elementWith;
             }
         }
     }

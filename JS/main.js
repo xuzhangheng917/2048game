@@ -5,6 +5,8 @@ const data = [];
 // 生成背景方格
 createBg()
 // 难度配置事件
+// 分数 history_score
+const score = document.querySelector(".FractionBox .Fraction");
 const difficulty = document.querySelectorAll(".GameDifficulty div");
 
 for (let i = 0; i < difficulty.length; i++) {
@@ -13,14 +15,13 @@ for (let i = 0; i < difficulty.length; i++) {
         clearChessboard()
         clearStyle()
         config.col = i+4;
+        score.innerText = 0;
         createBg()
         startGame()
     });
 }
 // 定义重新开始游戏
 const restartBtn = document.querySelector(".image");
-// 分数 history_score
-const score = document.querySelector(".FractionBox .Fraction");
 restartBtn.addEventListener("click", () => {
     console.log("重新开始游戏")
     // 清除棋盘 重新开始游戏
