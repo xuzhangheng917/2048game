@@ -1,12 +1,13 @@
 const buttons = document.querySelectorAll(".GameDifficulty button")
+
+let LastButton = buttons[0]
+
 buttons.forEach(
     (item) =>{
-        item.addEventListener("blur", () => {
-            console.log("失去了焦点")
-            item.classList.add("blur")
-            setTimeout(() => {
-                item.classList.remove("blur")
-            },500)
+        item.addEventListener("click",(event) => {
+            LastButton.classList.remove('ButtonClick')
+            event.target.classList.add('ButtonClick')
+            LastButton = event.target
         })
     }
 )
