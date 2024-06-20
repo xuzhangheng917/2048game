@@ -18,6 +18,7 @@ const config  =  {
         'rgba(50,114,155, .9)', // 1024
         'rgba(237,148,53, .9)' // 2048
     ],
-    scoreTarget: 128, // 目标分数
-    col:  10 // 列数
+    scoreTarget: 256, // 目标分数
+    col:  4, // 列数
+    interval : 20, // 方块间隔距离
 }

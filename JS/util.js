@@ -1,23 +1,23 @@
 // 随机生成一个棋子
-function randomChess(color, number) {
+function randomChess(number) {
 
-    if (chessNum >= 16){
+    if (chessNum >= config.col * config.col) {
         // 游戏结束
         lose()
         return
     }
-    let x = Math.floor(Math.random() * 4);
-    let y = Math.floor(Math.random() * 4);
+    let x = Math.floor(Math.random() * config.col);
+    let y = Math.floor(Math.random() * config.col);
     // 判断当前位置是否已经有棋子
     while (data[x][y]) {
-        x = Math.floor(Math.random() * 4);
-        y = Math.floor(Math.random() * 4);
+        x = Math.floor(Math.random() * config.col);
+        y = Math.floor(Math.random() * config.col);
     }
     if (number === undefined) {
         // 随机2和4
         number = Math.random() < 0.5 ? 2 : 4
     }
-    data[x][y] = new Pawn(color, {x, y}, config.chessClass, number, chessboard);
+    data[x][y] = new Pawn({x, y}, config.chessClass, number, chessboard);
     // 棋子数量+1
     chessNum++
 }
@@ -29,8 +29,8 @@ function moveUp() {
     // 是否增加分数
     let isAddScore = false;
     // 从第二排开始
-    for (let x = 0; x < 4; x++) {
-        for (let y = 1; y < 4; y++) {
+    for (let x = 0; x < config.col; x++) {
+        for (let y = 1; y < config.col; y++) {
             if (data[x][y]) {
                 // 移动棋子 从当前位置开始，向上查找
                 for (let i = y - 1; i >= 0; i--) {
@@ -61,7 +61,7 @@ function moveUp() {
     if (isAddScore) {
         addScore(score)
     }
-    randomChess("red")
+    randomChess()
 }
 
 // 移动棋子 下
@@ -71,11 +71,11 @@ function moveDown() {
     // 是否增加分数
     let isAddScore = false;
     // 从倒数第二排开始
-    for (let x = 0; x < 4; x++) {
-        for (let y = 2; y >= 0; y--) {
+    for (let x = 0; x < config.col; x++) {
+        for (let y = config.col - 2; y >= 0; y--) {
             if (data[x][y]) {
                 // 移动棋子 从当前位置开始，向下查找
-                for (let i = y + 1; i < 4; i++) {
+                for (let i = y + 1; i < config.col; i++) {
                     if (!data[x][i]) {
                         data[x][i - 1].moveDown()
                         data[x][i] = data[x][i - 1]
@@ -103,7 +103,7 @@ function moveDown() {
     if (isAddScore) {
         addScore(score)
     }
-    randomChess("red")
+    randomChess()
 }
 
 // 移动棋子 左
@@ -113,8 +113,8 @@ function moveLeft() {
     // 是否增加分数
     let isAddScore = false;
     // 从第二列开始
-    for (let y = 0; y < 4; y++) {
-        for (let x = 1; x < 4; x++) {
+    for (let y = 0; y < config.col; y++) {
+        for (let x = 1; x < config.col; x++) {
             if (data[x][y]) {
                 // 移动棋子 从当前位置开始，向左查找
                 for (let i = x - 1; i >= 0; i--) {
@@ -145,7 +145,7 @@ function moveLeft() {
     if (isAddScore) {
         addScore(score)
     }
-    randomChess("red")
+    randomChess()
 }
 
 // 移动棋子 右
@@ -155,11 +155,11 @@ function moveRight() {
     // 是否增加分数
     let isAddScore = false;
     // 从第二列开始
-    for (let y = 0; y < 4; y++) {
-        for (let x = 2; x >= 0; x--) {
+    for (let y = 0; y < config.col; y++) {
+        for (let x = config.col - 2; x >= 0; x--) {
             if (data[x][y]) {
                 // 移动棋子 从当前位置开始，向左查找
-                for (let i = x + 1; i < 4; i++) {
+                for (let i = x + 1; i < config.col; i++) {
                     if (!data[i][y]) {
                         data[i - 1][y].moveRight()
                         data[i][y] = data[i - 1][y]
@@ -187,7 +187,7 @@ function moveRight() {
     if (isAddScore) {
         addScore(score)
     }
-    randomChess("red")
+    randomChess()
 }
 
 //-------------------------------分数的逻辑--------------------------------
@@ -208,7 +208,7 @@ function addScore(number) {
     // 判断是否是最高分
     const maxScore = localStorage.getItem("maxScore");
     if (maxScore < parseInt(element.innerText)) {
-        localStorage.setItem("maxScore",element.innerText)
+        localStorage.setItem("maxScore", element.innerText)
         maxScoreElement.innerText = element.innerText
     }
     // 1. 秒数后删除span
@@ -235,8 +235,26 @@ function clearStyle() {
     document.querySelector("#overlay").classList.remove("lose")
     document.querySelector("#overlay").classList.remove("win")
 }
-// 开始游戏
+
+// 防抖
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(func, wait);
+    };
+}
+// 开始游戏、
+const debounceMoveUp = debounce(moveUp, 200);
+const debounceMoveDown = debounce(moveDown, 200);
+const debounceMoveLeft = debounce(moveLeft, 200);
+const debounceMoveRight = debounce(moveRight, 200);
+
 function startGame() {
+// 定义棋盘的宽高
+    for (let i = 0; i < config.col; i++) {
+        data.push([])
+    }
     const maxScoreElement = document.querySelector(".MaxFraction .Fraction")
     const maxScore = localStorage.getItem("maxScore")
     maxScoreElement.innerText = maxScore ? maxScore : 0
@@ -244,36 +262,80 @@ function startGame() {
     document.onkeydown = (e) => {
         // w 和 上键
         if (e.key === "w" || e.key === "ArrowUp") {
-            debounce(moveUp, 100)()
+            debounceMoveUp();
         }
         // s 和 下键
         else if (e.key === "s" || e.key === "ArrowDown") {
-            debounce(moveDown, 100)()
+            debounceMoveDown();
         }
         // a 和 左键
         else if (e.key === "a" || e.key === "ArrowLeft") {
-            debounce(moveLeft, 100)()
+            debounceMoveLeft();
         }
         // d 和 右键
         else if (e.key === "d" || e.key === "ArrowRight") {
-            debounce(moveRight, 100)()
+            debounceMoveRight();
         }
     }
     // 随机生成两个红棋子
-    randomChess("red", 2);
-    randomChess("red", 2)
+    randomChess(2);
+    randomChess(2);
 }
 
+// 生成背景方格
+function createBg() {
+    const element = document.getElementById("chessboard"); // 获取元素
+    const chessboardElement = document.querySelectorAll("#chessboard .bg"); // 获取元素
+    element.style.gridTemplateColumns = `repeat(${config.col},1fr)`; // 1fr 代表平均分配
+    element.style.gridTemplateRows = `repeat(${config.col},1fr)`;  // 1fr 代表平均分配
+    element.style.gap = config.interval + "px"; // 间距
+    // <div className="item"></div>
+    // 判断当前item 是否多余
+    if (chessboardElement.length === 0) {
+        for (let i = 0; i < config.col * config.col; i++) {
+            const item = document.createElement("div");
+            item.className = "item bg";
+            element.appendChild(item);
+        }
+        return
+    }
+    // 判断当前item 是否对于 删除多余的 重新设置宽度
+    if (chessboardElement.length > config.col * config.col) {
+        for (let i = 0; i < chessboardElement.length; i++) {
+            if (i >= config.col * config.col) {
+                element.removeChild(chessboardElement[i])
+            } else {
+                chessboardElement[i].style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                chessboardElement[i].style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+            }
+        }
+    }
+    // 判断当前item 是否不足
+    if (chessboardElement.length < config.col * config.col) {
+        for (let i = 0; i < config.col * config.col; i++) {
+            if (i >= chessboardElement.length) {
+                const item = document.createElement("div");
+                item.className = "item bg";
+                item.style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                item.style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                element.appendChild(item);
+            } else {
+                chessboardElement[i].style.width = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+                chessboardElement[i].style.height = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+            }
+        }
+    }
+}
 
-// 防抖
-function debounce(func, wait) {
-    let timeout;
-    return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-            func.apply(context, args);
-        }, wait);
-    };
+// 清理棋盘
+function clearChessboard() {
+    for (let i = 0; i < config.col; i++) {
+        for (let j = 0; j < config.col; j++) {
+            if (data[i][j]) {
+                data[i][j].isAlive = false;
+                data[i][j] = undefined;
+            }
+        }
+    }
+    chessNum = 0;
 }
