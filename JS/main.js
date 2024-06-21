@@ -7,7 +7,8 @@ createBg()
 // 难度配置事件
 // 分数 history_score
 const score = document.querySelector(".FractionBox .Fraction");
-const difficulty = document.querySelectorAll(".GameDifficulty div");
+const difficulty =
+    document.querySelectorAll(".GameDifficulty div");
 
 for (let i = 0; i < difficulty.length; i++) {
     difficulty[i].addEventListener("click",()=>{
@@ -23,7 +24,6 @@ for (let i = 0; i < difficulty.length; i++) {
 // 定义重新开始游戏
 const restartBtn = document.querySelector(".image");
 restartBtn.addEventListener("click", () => {
-    console.log("重新开始游戏")
     // 清除棋盘 重新开始游戏
     clearChessboard()
     clearStyle()

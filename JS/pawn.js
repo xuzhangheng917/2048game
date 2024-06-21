@@ -1,10 +1,10 @@
 class Pawn {
-    #color;
     #position;
     #isAlive;
     #div = document.createElement('div');
 
-    width = (config.width -  (config.col - 1) * config.interval) / config.col;
+    width = (config.width -  (config.col - 1) * config.interval)
+        / config.col;
     // 数字
     #number = 0;
 

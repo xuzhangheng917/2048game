@@ -1,4 +1,5 @@
-const buttons = document.querySelectorAll(".GameDifficulty button")
+const buttons =
+    document.querySelectorAll(".GameDifficulty button")
 
 let LastButton = buttons[0]
 
