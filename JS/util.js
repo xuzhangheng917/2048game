@@ -249,6 +249,10 @@ function lose() {
 
 // 输赢样式清除
 function clearStyle() {
+    const list = document.querySelectorAll("#overlay .start");
+    for (let i = 0; i < list.length; i++) {
+        list[i].remove()
+    }
     document.querySelector("#overlay").classList.remove("lose")
     document.querySelector("#overlay").classList.remove("win")
 }
