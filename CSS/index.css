@@ -199,7 +199,29 @@ h2 {
     }
 }
 
+.overlay .start {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background-size: cover;
+}
 
+.overlay .start_1 {
+    background-image: url("../assets/image/Star1.png");
+    top: 351px;
+    left: 217px;
+}
+
+.overlay .start_2 {
+    background-image: url("../assets/image/Star2.png");
+    top: 314px;
+    left: 334px;
+}
+.overlay .start_3 {
+    background-image: url("../assets/image/Star3.png");
+    top: 345px;
+    right: 201px;;
+}
 /*2*/
 .Two {
     background-color: rgba(50, 117, 46, .9) !important;

@@ -13,7 +13,7 @@ for (let i = 0; i < difficulty.length - 1; i++) {
         // 清除棋盘 重新开始游戏
         clearChessboard()
         clearStyle()
-        config.col = i+4;
+        config.col = 5-i;
         score.innerText = 0;
         createBg()
         startGame()
@@ -36,8 +36,10 @@ oldBtn.addEventListener("click", () => {
     const transform = chessboard.style.transform;
     if (transform === "") {
         chessboard.style.transform = "scale(1.5)";
+        oldBtn.classList.add("ButtonClick")
     } else {
         chessboard.style.transform = "";
+        oldBtn.classList.remove("ButtonClick")
     }
 })
 chessboard.style.width = config.width + "px";

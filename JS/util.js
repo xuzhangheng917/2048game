@@ -221,7 +221,24 @@ function addScore(number) {
 // 赢的样式
 function win() {
     document.onkeydown = null;
-    document.querySelector("#overlay").classList.add("win")
+    // 创建第3颗星星
+    const star1 = document.createElement("div");
+    const star2 = document.createElement("div");
+    const star3 = document.createElement("div");
+    const starList = [star1,star2,star3]
+    // 添加类名
+    star1.className = "start start_1 animate__animated animate__lightSpeedInLeft";
+    star2.className = "start start_2 animate__animated animate__slideInDown";
+    star3.className = "start start_3 animate__animated animate__lightSpeedInRight";
+    const overlay = document.querySelector("#overlay");
+    overlay.classList.add("win");
+    // 添加星星
+    for (let i = 0; i < 3; i++) {
+        const timer = setTimeout(() => {
+            overlay.appendChild(starList[i])
+            clearTimeout(timer)
+        }, 1200 * (i + 1))
+    }
 }
 
 // 输的样式
@@ -240,10 +257,13 @@ function clearStyle() {
 function debounce(func, wait) {
     let timeout;
     return function () {
-        clearTimeout(timeout);
-        timeout = setTimeout(func, wait);
-    };
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func()
+        }, wait);
+    }
 }
+
 // 开始游戏、
 const debounceMoveUp = debounce(moveUp, 200);
 const debounceMoveDown = debounce(moveDown, 200);
@@ -268,6 +288,7 @@ function startGame() {
         else if (e.key === "s" || e.key === "ArrowDown") {
             debounceMoveDown();
         }
+
         // a 和 左键
         else if (e.key === "a" || e.key === "ArrowLeft") {
             debounceMoveLeft();
@@ -286,7 +307,7 @@ function startGame() {
 function createBg() {
     const element = document.getElementById("chessboard"); // 获取元素
     const chessboardElement = document.querySelectorAll("#chessboard .bg"); // 获取元素
-    const elementWith = (config.width -  (config.col - 1) * config.interval) / config.col + "px";
+    const elementWith = (config.width - (config.col - 1) * config.interval) / config.col + "px";
     element.style.gridTemplateColumns = `repeat(${config.col},1fr)`; // 1fr 代表平均分配
     element.style.gridTemplateRows = `repeat(${config.col},1fr)`;  // 1fr 代表平均分配
     element.style.gap = config.interval + "px"; // 间距
@@ -296,6 +317,8 @@ function createBg() {
         for (let i = 0; i < config.col * config.col; i++) {
             const item = document.createElement("div");
             item.className = "item bg";
+            item.style.width = elementWith;
+            item.style.height = elementWith;
             element.appendChild(item);
         }
         return
