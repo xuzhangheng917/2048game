@@ -7,10 +7,8 @@ createBg()
 // 难度配置事件
 // 分数 history_score
 const score = document.querySelector(".FractionBox .Fraction");
-const difficulty =
-    document.querySelectorAll(".GameDifficulty div");
-
-for (let i = 0; i < difficulty.length; i++) {
+const difficulty = document.querySelectorAll(".GameDifficulty div");
+for (let i = 0; i < difficulty.length - 1; i++) {
     difficulty[i].addEventListener("click",()=>{
         // 清除棋盘 重新开始游戏
         clearChessboard()
@@ -30,7 +28,18 @@ restartBtn.addEventListener("click", () => {
     score.innerText = 0;
     startGame();
 })
+// 设置老年模式
+const oldBtn = document.querySelector(".OldMode");
 const chessboard = document.getElementById("chessboard");
+oldBtn.addEventListener("click", () => {
+    // 放大棋盘 1.5倍
+    const transform = chessboard.style.transform;
+    if (transform === "") {
+        chessboard.style.transform = "scale(1.5)";
+    } else {
+        chessboard.style.transform = "";
+    }
+})
 chessboard.style.width = config.width + "px";
 chessboard.style.height = config.height + "px";
 // 开始游戏
