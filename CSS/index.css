@@ -7,13 +7,18 @@ body {
     background-image: url("../assets/image/background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    font-family: Star, serif;
+    background-attachment: fixed;
+    font-family: Star, Arial, sans-serif; /* 添加回退字体 */
     user-select: none;
+    /* 启用硬件加速 */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 @font-face {
     font-family: "Star";
     src: url("../assets/fonts/Star.ttf");
+    font-display: swap; /* 优化字体加载 */
 }
 .Title {
     /* 使用 Flexbox 布局 */
@@ -148,6 +153,9 @@ h2 {
     height: 250px;
     background-image: url("../assets/image/dog.gif");
     background-size: cover;
+    /* 优化动画性能 */
+    will-change: background-image;
+    transform: translateZ(0);
 }
 
 .image:hover {
@@ -278,8 +286,11 @@ h2 {
 }
 
 .pawn {
-    transition: all 0.2s;
+    transition: transform 0.2s ease-out;
     position: absolute;
+    /* 启用硬件加速 */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .rise_score {
@@ -371,5 +382,54 @@ h2 {
         font-size: 20px;
         background-color: rgba(255, 255, 255, .7);
     }
+}
+
+/* 性能优化 - 减少重绘和回流 */
+.item, .pawn {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 1200px) {
+    .CenterBox {
+        width: 600px;
+        height: 600px;
+    }
+    .Title {
+        font-size: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ContextBox {
+        flex-direction: column;
+        height: auto;
+    }
+    .CenterBox {
+        width: 400px;
+        height: 400px;
+    }
+    .Title {
+        font-size: 60px;
+    }
+    .leftBox, .RightBox {
+        width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+}
+
+/* 预加载关键图片 */
+.preload-images {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    background-image: 
+        url("../assets/image/win.gif"),
+        url("../assets/image/lose.gif"),
+        url("../assets/image/cry.gif");
 }
 

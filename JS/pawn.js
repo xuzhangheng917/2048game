@@ -22,9 +22,8 @@ class Pawn {
                 // 计算位置
                 result.x = value.x * (this.width + config.interval); // 4 是棋盘的格子数
                 result.y = value.y * (this.width + config.interval);
-                // 给position赋值时，同时修改div的transform属性
-                this.#div.style.top = `${result.y + 20}px`;
-                this.#div.style.left = `${result.x + 20}px`;
+                // 使用transform代替top/left以获得更好的性能
+                this.#div.style.transform = `translate(${result.x + 20}px, ${result.y + 20}px)`;
                 this.#position = value;
             }
         })

@@ -2,14 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2048小游戏</title>
-  <link rel="stylesheet" href="./CSS/animate.min.css"/>
+  <!-- 预加载关键资源 -->
+  <link rel="preload" href="./assets/fonts/Star.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="./assets/image/background.jpg" as="image">
+  <!-- 异步加载非关键CSS -->
+  <link rel="preload" href="./CSS/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="./CSS/animate.min.css"></noscript>
   <link rel="stylesheet" href="./CSS/index.css">
-  <script src="./JS/config.js"></script>
-  <script src="./JS/pawn.js"></script>
-  <script src="./JS/util.js"></script>
+  <!-- 延迟加载JavaScript -->
+  <script defer src="./JS/performance.js"></script>
+  <script defer src="./JS/config.js"></script>
+  <script defer src="./JS/pawn.js"></script>
+  <script defer src="./JS/util.js"></script>
 </head>
 <body>
+<!-- 预加载图片容器 -->
+<div class="preload-images" aria-hidden="true"></div>
 <h1 class="Title">
   <div>2</div>
   <div>0</div>
@@ -69,7 +79,7 @@
     </div>
   </div>
 </div>
-    <script src="./JS/Style.js"></script>
-    <script src="./JS/main.js"></script>
+    <script defer src="./JS/Style.js"></script>
+    <script defer src="./JS/main.js"></script>
 </body>
 </html>

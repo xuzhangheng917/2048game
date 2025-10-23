@@ -192,30 +192,47 @@ function moveRight() {
 
 //-------------------------------分数的逻辑--------------------------------
 
+// 缓存DOM元素以提高性能
+const cachedElements = {
+    nowScore: null,
+    currentScore: null,
+    maxScore: null
+};
+
 function addScore(number) {
-    const fatherElement = document.getElementById("nowScore");
-    const element = document.querySelector(".FractionBox .Fraction")
-    const maxScoreElement = document.querySelector(".MaxFraction .Fraction")
-    // 创建上升动画的元素
-    const spanElement = document.createElement("span");
-    // 设置span的内容
-    spanElement.innerText = "+" + number;
-    // 设置span的样式
-    spanElement.className = 'Fraction rise_score animate__animated animate__fadeOutUp';
-    fatherElement.appendChild(spanElement)
-    // 修改分数
-    element.innerText = parseInt(element.innerText) + number
-    // 判断是否是最高分
-    const maxScore = localStorage.getItem("maxScore");
-    if (maxScore < parseInt(element.innerText)) {
-        localStorage.setItem("maxScore", element.innerText)
-        maxScoreElement.innerText = element.innerText
+    // 使用缓存的DOM元素
+    if (!cachedElements.nowScore) {
+        cachedElements.nowScore = document.getElementById("nowScore");
+        cachedElements.currentScore = document.querySelector(".FractionBox .Fraction");
+        cachedElements.maxScore = document.querySelector(".MaxFraction .Fraction");
     }
-    // 1. 秒数后删除span
-    const timer = setTimeout(() => {
-        spanElement.remove()
-        clearTimeout(timer)
-    }, 1000)
+    
+    // 使用requestAnimationFrame优化动画
+    requestAnimationFrame(() => {
+        // 创建上升动画的元素
+        const spanElement = document.createElement("span");
+        spanElement.textContent = "+" + number;
+        spanElement.className = 'Fraction rise_score animate__animated animate__fadeOutUp';
+        cachedElements.nowScore.appendChild(spanElement);
+        
+        // 修改分数
+        const currentScore = parseInt(cachedElements.currentScore.textContent) + number;
+        cachedElements.currentScore.textContent = currentScore;
+        
+        // 判断是否是最高分
+        const maxScore = parseInt(localStorage.getItem("maxScore") || "0");
+        if (maxScore < currentScore) {
+            localStorage.setItem("maxScore", currentScore.toString());
+            cachedElements.maxScore.textContent = currentScore;
+        }
+        
+        // 使用更高效的方式清理元素
+        setTimeout(() => {
+            if (spanElement.parentNode) {
+                spanElement.parentNode.removeChild(spanElement);
+            }
+        }, 1000);
+    });
 }
 
 // 赢的样式
@@ -257,22 +274,36 @@ function clearStyle() {
     document.querySelector("#overlay").classList.remove("win")
 }
 
-// 防抖
+// 防抖 - 优化版本
 function debounce(func, wait) {
     let timeout;
-    return function () {
-        if (timeout) clearTimeout(timeout);
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
         timeout = setTimeout(() => {
-            func()
+            func.apply(context, args);
         }, wait);
     }
 }
 
-// 开始游戏、
-const debounceMoveUp = debounce(moveUp, 200);
-const debounceMoveDown = debounce(moveDown, 200);
-const debounceMoveLeft = debounce(moveLeft, 200);
-const debounceMoveRight = debounce(moveRight, 200);
+// 节流函数 - 用于高频事件
+function throttle(func, limit) {
+    let inThrottle;
+    return function (...args) {
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// 开始游戏 - 使用节流而不是防抖以获得更好的响应性
+const throttledMoveUp = throttle(moveUp, 150);
+const throttledMoveDown = throttle(moveDown, 150);
+const throttledMoveLeft = throttle(moveLeft, 150);
+const throttledMoveRight = throttle(moveRight, 150);
 
 function startGame() {
 // 定义棋盘的宽高
@@ -282,77 +313,93 @@ function startGame() {
     const maxScoreElement = document.querySelector(".MaxFraction .Fraction")
     const maxScore = localStorage.getItem("maxScore")
     maxScoreElement.innerText = maxScore ? maxScore : 0
-    // 全屏监听 上下左右
-    document.onkeydown = (e) => {
-        // w 和 上键
-        if (e.key === "w" || e.key === "ArrowUp") {
-            debounceMoveUp();
+    // 全屏监听 上下左右 - 优化键盘事件处理
+    document.addEventListener('keydown', (e) => {
+        // 阻止默认行为以防止页面滚动
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)) {
+            e.preventDefault();
         }
-        // s 和 下键
-        else if (e.key === "s" || e.key === "ArrowDown") {
-            debounceMoveDown();
+        
+        // 使用switch语句提高性能
+        switch (e.key) {
+            case "w":
+            case "ArrowUp":
+                throttledMoveUp();
+                break;
+            case "s":
+            case "ArrowDown":
+                throttledMoveDown();
+                break;
+            case "a":
+            case "ArrowLeft":
+                throttledMoveLeft();
+                break;
+            case "d":
+            case "ArrowRight":
+                throttledMoveRight();
+                break;
         }
-
-        // a 和 左键
-        else if (e.key === "a" || e.key === "ArrowLeft") {
-            debounceMoveLeft();
-        }
-        // d 和 右键
-        else if (e.key === "d" || e.key === "ArrowRight") {
-            debounceMoveRight();
-        }
-    }
+    }, { passive: false });
     // 随机生成两个红棋子
     randomChess(2);
     randomChess(2);
 }
 
-// 生成背景方格
+// 生成背景方格 - 优化版本
 function createBg() {
-    const element = document.getElementById("chessboard"); // 获取元素
-    const chessboardElement = document.querySelectorAll("#chessboard .bg"); // 获取元素
-    const elementWith = (config.width - (config.col - 1) * config.interval) / config.col + "px";
-    element.style.gridTemplateColumns = `repeat(${config.col},1fr)`; // 1fr 代表平均分配
-    element.style.gridTemplateRows = `repeat(${config.col},1fr)`;  // 1fr 代表平均分配
-    element.style.gap = config.interval + "px"; // 间距
-    // <div className="item"></div>
-    // 判断当前item 是否多余
-    if (chessboardElement.length === 0) {
-        for (let i = 0; i < config.col * config.col; i++) {
-            const item = document.createElement("div");
-            item.className = "item bg";
-            item.style.width = elementWith;
-            item.style.height = elementWith;
-            element.appendChild(item);
-        }
-        return
-    }
-    // 判断当前item 是否对于 删除多余的 重新设置宽度
-    if (chessboardElement.length > config.col * config.col) {
-        for (let i = 0; i < chessboardElement.length; i++) {
-            if (i >= config.col * config.col) {
-                element.removeChild(chessboardElement[i])
-            } else {
-                chessboardElement[i].style.width = elementWith;
-                chessboardElement[i].style.height = elementWith;
-            }
-        }
-    }
-    // 判断当前item 是否不足
-    if (chessboardElement.length < config.col * config.col) {
-        for (let i = 0; i < config.col * config.col; i++) {
-            if (i >= chessboardElement.length) {
+    const element = document.getElementById("chessboard");
+    const chessboardElements = element.querySelectorAll(".bg");
+    const elementWidth = (config.width - (config.col - 1) * config.interval) / config.col + "px";
+    const totalCells = config.col * config.col;
+    
+    // 使用DocumentFragment提高DOM操作性能
+    const fragment = document.createDocumentFragment();
+    
+    // 批量更新样式
+    requestAnimationFrame(() => {
+        element.style.gridTemplateColumns = `repeat(${config.col}, 1fr)`;
+        element.style.gridTemplateRows = `repeat(${config.col}, 1fr)`;
+        element.style.gap = config.interval + "px";
+        
+        const currentCount = chessboardElements.length;
+        
+        if (currentCount === 0) {
+            // 创建所有背景格子
+            for (let i = 0; i < totalCells; i++) {
                 const item = document.createElement("div");
                 item.className = "item bg";
-                item.style.width = elementWith;
-                item.style.height = elementWith;
-                element.appendChild(item);
-            } else {
-                chessboardElement[i].style.width = elementWith;
-                chessboardElement[i].style.height = elementWith;
+                item.style.width = elementWidth;
+                item.style.height = elementWidth;
+                fragment.appendChild(item);
             }
+            element.appendChild(fragment);
+        } else if (currentCount > totalCells) {
+            // 删除多余的元素
+            for (let i = currentCount - 1; i >= totalCells; i--) {
+                chessboardElements[i].remove();
+            }
+            // 更新剩余元素的尺寸
+            for (let i = 0; i < totalCells; i++) {
+                chessboardElements[i].style.width = elementWidth;
+                chessboardElements[i].style.height = elementWidth;
+            }
+        } else if (currentCount < totalCells) {
+            // 更新现有元素
+            for (let i = 0; i < currentCount; i++) {
+                chessboardElements[i].style.width = elementWidth;
+                chessboardElements[i].style.height = elementWidth;
+            }
+            // 添加缺少的元素
+            for (let i = currentCount; i < totalCells; i++) {
+                const item = document.createElement("div");
+                item.className = "item bg";
+                item.style.width = elementWidth;
+                item.style.height = elementWidth;
+                fragment.appendChild(item);
+            }
+            element.appendChild(fragment);
         }
-    }
+    });
 }
 
 // 清理棋盘
